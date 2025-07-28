@@ -1,18 +1,23 @@
-import './App.css';
-import ProductList from './components/ProductList';
-import Cart from './components/Cart';
-import OrderConfirmation from './components/OrderConfirmation';
-import { useEffect, useState } from 'react';
-import { fetchProducts, createOrUpdateCart, getCart, checkout } from './api/index';
+import "./App.css";
+import ProductList from "./components/ProductList";
+import Cart from "./components/Cart";
+import OrderConfirmation from "./components/OrderConfirmation";
+import { useEffect, useState } from "react";
+import {
+  fetchProducts,
+  createOrUpdateCart,
+  getCart,
+  checkout,
+} from "./api/index";
 
-const TENANT_ID = 'tenant1';
-const CART_ID = 'cart1';
+const TENANT_ID = "tenant1";
+const CART_ID = "cart1";
 //will do the upsale enable toggle from the UI
 function App() {
   const [products, setProducts] = useState<any[]>([]);
   const [cart, setCart] = useState<any>(null);
   const [order, setOrder] = useState<any>(null);
-  const [promoCode, setPromoCode] = useState('');
+  const [promoCode, setPromoCode] = useState("");
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [loading, setLoading] = useState(false);
   const [upsellEnabled, setUpsellEnabled] = useState(true); // NEW: global toggle
@@ -37,20 +42,22 @@ function App() {
   };
 
   const handleUpdateCartItem = async (productId: string, quantity: number) => {
-  if (!cart) return;
-  const items = cart.items.map((item: any) =>
-    item.product_id === productId ? { ...item, quantity } : item
-  );
-  const newCart = await createOrUpdateCart(TENANT_ID, CART_ID, items);
-  setCart(newCart);
-};
+    if (!cart) return;
+    const items = cart.items.map((item: any) =>
+      item.product_id === productId ? { ...item, quantity } : item,
+    );
+    const newCart = await createOrUpdateCart(TENANT_ID, CART_ID, items);
+    setCart(newCart);
+  };
 
-const handleRemoveCartItem = async (productId: string) => {
-  if (!cart) return;
-  const items = cart.items.filter((item: any) => item.product_id !== productId);
-  const newCart = await createOrUpdateCart(TENANT_ID, CART_ID, items);
-  setCart(newCart);
-};
+  const handleRemoveCartItem = async (productId: string) => {
+    if (!cart) return;
+    const items = cart.items.filter(
+      (item: any) => item.product_id !== productId,
+    );
+    const newCart = await createOrUpdateCart(TENANT_ID, CART_ID, items);
+    setCart(newCart);
+  };
 
   // Handle checkout
   const handleCheckout = async () => {
@@ -61,7 +68,7 @@ const handleRemoveCartItem = async (productId: string) => {
       setOrder(res.order);
       setShowConfirmation(true);
     } else {
-      alert(res.error || 'Checkout failed');
+      alert(res.error || "Checkout failed");
     }
   };
 
@@ -69,7 +76,7 @@ const handleRemoveCartItem = async (productId: string) => {
   const handleBackToShop = async () => {
     setShowConfirmation(false);
     setOrder(null);
-    setPromoCode('');
+    setPromoCode("");
     // Optionally, clear cart or refresh
     getCart(TENANT_ID, CART_ID).then(setCart);
   };
@@ -85,9 +92,21 @@ const handleRemoveCartItem = async (productId: string) => {
   }
 
   return (
-    <div className="app-container" style={{ maxWidth: 900, margin: 'auto', padding: 32 }}>
-      <h1 style={{ marginBottom: 32, textAlign: 'center', color: '#0f172a' }}>Simple Shop</h1>
-      <div style={{ display: 'flex', gap: 48, alignItems: 'flex-start', justifyContent: 'center' }}>
+    <div
+      className="app-container"
+      style={{ maxWidth: 900, margin: "auto", padding: 32 }}
+    >
+      <h1 style={{ marginBottom: 32, textAlign: "center", color: "#0f172a" }}>
+        Simple Shop
+      </h1>
+      <div
+        style={{
+          display: "flex",
+          gap: 48,
+          alignItems: "flex-start",
+          justifyContent: "center",
+        }}
+      >
         <div style={{ flex: 2 }}>
           <ProductList products={products} onAddToCart={handleAddToCart} />
         </div>
@@ -100,9 +119,9 @@ const handleRemoveCartItem = async (productId: string) => {
             loading={loading}
             products={products}
             onUpdateCartItem={handleUpdateCartItem}
-          onRemoveCartItem={handleRemoveCartItem}
-          upsellEnabled={upsellEnabled}           
-          setUpsellEnabled={setUpsellEnabled}  
+            onRemoveCartItem={handleRemoveCartItem}
+            upsellEnabled={upsellEnabled}
+            setUpsellEnabled={setUpsellEnabled}
           />
         </div>
       </div>

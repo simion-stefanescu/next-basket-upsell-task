@@ -1,4 +1,4 @@
-import { Cart, CartItem } from '../models/cart';
+import { Cart, CartItem } from "../models/cart";
 
 const carts: Record<string, Cart> = {};
 
@@ -12,7 +12,11 @@ export function saveCart(cart: Cart) {
   carts[key] = cart;
 }
 
-export function createOrUpdateCart(tenant_id: string, cart_id: string, items: CartItem[]): Cart {
+export function createOrUpdateCart(
+  tenant_id: string,
+  cart_id: string,
+  items: CartItem[],
+): Cart {
   const cart: Cart = { id: cart_id, tenant_id, items };
   saveCart(cart);
   return cart;

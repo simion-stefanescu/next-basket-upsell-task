@@ -1,5 +1,5 @@
-import React from 'react';
-import './Cart.css';
+import React from "react";
+import "./Cart.css";
 
 interface Product {
   id: string;
@@ -13,7 +13,6 @@ interface CartItem {
   quantity: number;
 }
 
-
 interface CartProps {
   cart: { items: CartItem[] } | null;
   promoCode: string;
@@ -23,7 +22,7 @@ interface CartProps {
   onRemoveCartItem: (productId: string) => void;
   loading?: boolean;
   products: Product[];
-  upsellEnabled: boolean;                                      // NEW
+  upsellEnabled: boolean; // NEW
   setUpsellEnabled: React.Dispatch<React.SetStateAction<boolean>>; // NEW
 }
 
@@ -35,8 +34,8 @@ const Cart: React.FC<CartProps> = ({
   onUpdateCartItem,
   onRemoveCartItem,
   loading,
-  products, 
-  upsellEnabled,          
+  products,
+  upsellEnabled,
   setUpsellEnabled,
 }) => {
   const productMap: { [id: string]: Product } = {};
@@ -56,19 +55,28 @@ const Cart: React.FC<CartProps> = ({
             <li className="cart-item" key={idx}>
               <span className="cart-item-name">
                 {productMap[item.product_id]?.name || item.product_id}
-                <span style={{ color: '#6b7280', fontSize: 12 }}>
-                  {' '}@ ${productMap[item.product_id]?.price?.toFixed(2) || '-'}
+                <span style={{ color: "#6b7280", fontSize: 12 }}>
+                  {" "}
+                  @ ${productMap[item.product_id]?.price?.toFixed(2) || "-"}
                 </span>
               </span>
               <button
                 className="cart-btn"
                 aria-label={`Decrease quantity of ${productMap[item.product_id]?.name || item.product_id}`}
-                onClick={() => handleQuantityChange(item.product_id, item.quantity - 1)}
+                onClick={() =>
+                  handleQuantityChange(item.product_id, item.quantity - 1)
+                }
                 disabled={loading || item.quantity <= 1}
                 type="button"
-              >–</button>
-              <label htmlFor={`qty-input-${item.product_id}`} className="visually-hidden">
-                Quantity for {productMap[item.product_id]?.name || item.product_id}
+              >
+                –
+              </button>
+              <label
+                htmlFor={`qty-input-${item.product_id}`}
+                className="visually-hidden"
+              >
+                Quantity for{" "}
+                {productMap[item.product_id]?.name || item.product_id}
               </label>
               <input
                 className="cart-qty-input"
@@ -77,17 +85,26 @@ const Cart: React.FC<CartProps> = ({
                 min={1}
                 max={productMap[item.product_id]?.stock || 99}
                 value={item.quantity}
-                onChange={e => handleQuantityChange(item.product_id, Number(e.target.value))}
+                onChange={(e) =>
+                  handleQuantityChange(item.product_id, Number(e.target.value))
+                }
                 disabled={loading}
                 aria-label={`Quantity for ${productMap[item.product_id]?.name || item.product_id}`}
               />
               <button
                 className="cart-btn"
                 aria-label={`Increase quantity of ${productMap[item.product_id]?.name || item.product_id}`}
-                onClick={() => handleQuantityChange(item.product_id, item.quantity + 1)}
-                disabled={loading || item.quantity >= (productMap[item.product_id]?.stock || 99)}
+                onClick={() =>
+                  handleQuantityChange(item.product_id, item.quantity + 1)
+                }
+                disabled={
+                  loading ||
+                  item.quantity >= (productMap[item.product_id]?.stock || 99)
+                }
                 type="button"
-              >+</button>
+              >
+                +
+              </button>
               <button
                 className="cart-btn-remove"
                 onClick={() => onRemoveCartItem(item.product_id)}
@@ -95,12 +112,14 @@ const Cart: React.FC<CartProps> = ({
                 aria-label={`Remove ${productMap[item.product_id]?.name || item.product_id} from cart`}
                 type="button"
                 title={`Remove ${productMap[item.product_id]?.name || item.product_id}`}
-              >×</button>
+              >
+                ×
+              </button>
             </li>
           ))}
         </ul>
       ) : (
-        <p style={{ color: '#999' }}>Cart is empty</p>
+        <p style={{ color: "#999" }}>Cart is empty</p>
       )}
       <label htmlFor="cart-promo-input" className="cart-promo-label">
         Promo code
@@ -114,13 +133,13 @@ const Cart: React.FC<CartProps> = ({
         disabled={loading}
         aria-label="Promo code"
       />
-      <label style={{ marginLeft: 16, userSelect: 'none', fontSize: 14 }}>
+      <label style={{ marginLeft: 16, userSelect: "none", fontSize: 14 }}>
         <input
-            type="checkbox"
-            checked={upsellEnabled}
-            onChange={e => setUpsellEnabled(e.target.checked)}
-            style={{ marginRight: 4 }}
-            aria-label="Enable upsell suggestions"
+          type="checkbox"
+          checked={upsellEnabled}
+          onChange={(e) => setUpsellEnabled(e.target.checked)}
+          style={{ marginRight: 4 }}
+          aria-label="Enable upsell suggestions"
         />
         Enable Upsell
       </label>
@@ -130,7 +149,7 @@ const Cart: React.FC<CartProps> = ({
         disabled={loading || !(cart?.items && cart.items.length > 0)}
         type="button"
       >
-        {loading ? 'Processing...' : 'Checkout'}
+        {loading ? "Processing..." : "Checkout"}
       </button>
     </div>
   );
