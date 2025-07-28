@@ -5,7 +5,11 @@ const router = Router();
 
 router.get('/:tenant_id/orders/:order_id', (req, res) => {
   const order = getOrder(req.params.tenant_id, req.params.order_id);
-  order ? res.json(order) : res.status(404).json({ error: "Not found" });
+  if (order) {
+    res.json(order) 
+  } else {
+    res.status(404).json({ error: "Not found" });
+  } 
 });
 
 export default router;

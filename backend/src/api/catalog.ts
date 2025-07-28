@@ -9,7 +9,11 @@ router.get('/:tenant_id/products', (req, res) => {
 
 router.get('/:tenant_id/products/:id', (req, res) => {
   const prod = getProduct(req.params.tenant_id, req.params.id);
-  prod ? res.json(prod) : res.status(404).json({ error: "Not found" });
+  if (prod) {
+     res.json(prod) } 
+     else {
+         res.status(404).json({ error: "Not found" });
+     }
 });
 
 export default router;

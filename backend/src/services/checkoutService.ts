@@ -39,9 +39,9 @@ export function checkoutCart(
     const prod = allProducts.find(p => p.id === item.product_id);
     if (prod) subtotal += prod.price * item.quantity;
   });
-  let discount = (promoCode === PROMO_CODE) ? subtotal * PROMO_DISCOUNT : 0;
-  let vat = (subtotal - discount) * VAT_RATE;
-  let total = subtotal - discount + vat;
+  const discount = (promoCode === PROMO_CODE) ? subtotal * PROMO_DISCOUNT : 0;
+  const vat = (subtotal - discount) * VAT_RATE;
+  const total = subtotal - discount + vat;
 
   const order: Order = {
     id: Date.now().toString(),

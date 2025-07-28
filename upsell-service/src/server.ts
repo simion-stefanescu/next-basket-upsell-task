@@ -15,11 +15,8 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY});
 
 app.post('/upsell', async(req, res)=>{
     const cartItems = req.body.cartItems || [];
-    // Suppose you have access to the product catalog as a map/object/array:
-    function getProductName(productId: string, products: any[]): string {
-        const found = products.find(p => p.id === productId);
-        return found ? found.name : productId;
-    }
+    
+    
   
 
     const availableNames = products.filter(p => p.stock > 0).map(p => p.name).join(', ');
