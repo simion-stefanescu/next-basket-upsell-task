@@ -1,22 +1,31 @@
-version: "3.8"
 services:
   backend:
-    build:
-      context: .
-      dockerfile: docker/backend.Dockerfile
-    env_file:
-      - backend/.env
+    build: ./backend
     ports:
       - "4000:4000"
-    volumes:
-      - ./backend:/app
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+    depends_on:
+      - upsell
+    restart: unless-stopped
+
   frontend:
-    build:
-      context: .
-      dockerfile: docker/frontend.Dockerfile
+    build: ./frontend
     ports:
       - "5173:5173"
+    environment:
+      - NODE_ENV=production
+      - VITE_API_URL=http://backend:4000
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/app
+    restart: unless-stopped
+
+  upsell:
+    build: ./upsell-service
+    ports:
+      - "5005:5005"
+    environment:
+      - NODE_ENV=production
+      - PORT=5005
+    restart: unless-stopped
