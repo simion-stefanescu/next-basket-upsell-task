@@ -1,15 +1,19 @@
+# Build stage
+FROM node:20-alpine AS builder
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm install --legacy-peer-deps
+COPY . .
+RUN npm run build
+
+# Production stage
 FROM node:20-alpine
 WORKDIR /app
 
-# Install dependencies first (layer caching)
+COPY --from=builder /app/dist ./dist
 COPY package.json package-lock.json ./
-RUN npm install --legacy-peer-deps
-
-# Copy all source files
-COPY . .
-
-# Build for production (dist/)
-RUN npm run build
+RUN npm install --legacy-peer-deps --production
 
 EXPOSE 4000
-CMD ["npm", "run", "start"]
+CMD ["node", "dist/server.js"]

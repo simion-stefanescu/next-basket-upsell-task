@@ -1,5 +1,6 @@
 /node_modules
 /dist
 .env
+/upsell-service/.env
 .DS_Store
 .vscode/

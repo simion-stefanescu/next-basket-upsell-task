@@ -1,0 +1,44 @@
+[
+    {
+        "id": "p1",
+        "tenant_id": "tenant1",
+        "name": "T-shirt",
+        "price": 25,
+        "stock": 10
+    },
+    {
+        "id": "p2",
+        "tenant_id": "tenant1",
+        "name": "Jeans",
+        "price": 60,
+        "stock": 5
+    },
+    {
+        "id": "p3",
+        "tenant_id": "tenant2",
+        "name": "Sneakers",
+        "price": 80,
+        "stock": 8
+    },
+    {
+        "id": "p4",
+        "tenant_id": "tenant1",
+        "name": "Shirt",
+        "price": 25,
+        "stock": 10
+    },
+    {
+        "id": "p5",
+        "tenant_id": "tenant1",
+        "name": "Dress",
+        "price": 60,
+        "stock": 5
+    },
+    {
+        "id": "p6",
+        "tenant_id": "tenant2",
+        "name": "Shoes",
+        "price": 80,
+        "stock": 8
+    }
+]

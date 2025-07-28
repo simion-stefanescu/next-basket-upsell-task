@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import OpenAI from "openai";
-import products from "../../backend/src/db/products.json";
+import products from "../src/products.json";
 
 dotenv.config();
 
