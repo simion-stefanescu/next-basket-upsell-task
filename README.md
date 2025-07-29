@@ -1,5 +1,15 @@
 # Next Basket Upsell Task
 
+## System Architecture Diagrams
+
+### Slide 1: Context Diagram
+![System Overview - Components and Interactions](./diagrams/SystemOverview.png)
+
+### Slide 2: Sequence Diagram
+![Sequence Diagram - User to Upsell](./diagrams/UserFlow.png)
+
+### Slide 3: Additional Diagram
+![Another relevant diagram](./diagrams/DeploymentArchitecture.png)
 ## Overview
 
 This project contains three main services running in Docker containers:
