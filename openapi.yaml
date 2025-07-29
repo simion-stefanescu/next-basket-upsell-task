@@ -1,0 +1,46 @@
+openapi: 3.0.0
+info:
+  title: Upsell Service API
+  description: Provides upsell suggestions based on current cart items
+  version: 1.0.0
+servers:
+  - url: http://localhost:5005
+paths:
+  /upsell:
+    post:
+      summary: Get upsell suggestions
+      requestBody:
+        description: Cart items to analyze for upsell suggestions
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cartItems:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      productId:
+                        type: string
+                      quantity:
+                        type: integer
+      responses:
+        '200':
+          description: List of upsell items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    productId:
+                      type: string
+                    name:
+                      type: string
+                    price:
+                      type: number
+        '400':
+          description: Invalid input
