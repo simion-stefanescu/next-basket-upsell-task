@@ -27,7 +27,7 @@ paths:
                       quantity:
                         type: integer
       responses:
-        '200':
+        "200":
           description: List of upsell items
           content:
             application/json:
@@ -42,5 +42,5 @@ paths:
                       type: string
                     price:
                       type: number
-        '400':
+        "400":
           description: Invalid input
