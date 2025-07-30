@@ -1,16 +1,176 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
-  title: Upsell Service API
-  description: Provides upsell suggestions based on current cart items
+  title: AI-Powered Checkout & Upsell APIs
   version: 1.0.0
+  description: APIs for catalog, cart, checkout with AI upsell and tenant isolation.
+
 servers:
+  - url: http://localhost:4000
+    description: Backend API server
   - url: http://localhost:5005
+    description: Upsell Service
+
+components:
+  parameters:
+    TenantId:
+      name: X-Tenant-ID
+      in: header
+      required: true
+      description: Tenant identifier for multi-tenant scoping
+      schema:
+        type: string
+
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+          format: float
+        stock:
+          type: integer
+      required:
+        - id
+        - name
+        - price
+        - stock
+
+    CartItem:
+      type: object
+      properties:
+        productId:
+          type: string
+        quantity:
+          type: integer
+      required:
+        - productId
+        - quantity
+
+    Cart:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItem'
+      required:
+        - items
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+        tenantId:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItem'
+        subtotal:
+          type: number
+          format: float
+        discount:
+          type: number
+          format: float
+        vat:
+          type: number
+          format: float
+        total:
+          type: number
+          format: float
+      required:
+        - id
+        - tenantId
+        - items
+        - subtotal
+        - discount
+        - vat
+        - total
+
+    UpsellSuggestion:
+      type: object
+      properties:
+        productId:
+          type: string
+        reason:
+          type: string
+        confidence:
+          type: number
+          format: float
+      required:
+        - productId
+        - reason
+        - confidence
+
 paths:
-  /upsell:
+
+  /catalog:
+    get:
+      summary: List all products for the tenant
+      parameters:
+        - $ref: '#/components/parameters/TenantId'
+      responses:
+        '200':
+          description: List of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+
+  /catalog/{id}:
+    get:
+      summary: Get product by ID
+      parameters:
+        - $ref: '#/components/parameters/TenantId'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Product detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+
+  /cart:
     post:
-      summary: Get upsell suggestions
+      summary: Create or update a cart
+      parameters:
+        - $ref: '#/components/parameters/TenantId'
       requestBody:
-        description: Cart items to analyze for upsell suggestions
+        description: Cart items
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+      responses:
+        '200':
+          description: Cart updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+
+  /checkout:
+    post:
+      summary: Checkout the cart, reserve stock, create order, and optionally get upsell
+      parameters:
+        - $ref: '#/components/parameters/TenantId'
+      requestBody:
+        description: Checkout data including cart items and optional promo code
         required: true
         content:
           application/json:
@@ -20,27 +180,57 @@ paths:
                 cartItems:
                   type: array
                   items:
-                    type: object
-                    properties:
-                      productId:
-                        type: string
-                      quantity:
-                        type: integer
+                    $ref: '#/components/schemas/CartItem'
+                promoCode:
+                  type: string
+                  description: Optional promo code for discount
+              required:
+                - cartItems
       responses:
-        "200":
-          description: List of upsell items
+        '200':
+          description: Order confirmed with optional upsell suggestions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  order:
+                    $ref: '#/components/schemas/Order'
+                  upsellSuggestions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UpsellSuggestion'
+        '400':
+          description: Invalid request or stock validation failed
+
+  /upsell:
+    post:
+      summary: Get upsell suggestions for given cart items
+      servers:
+        - url: http://localhost:5005
+      requestBody:
+        description: Cart items to analyze
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cartItems:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CartItem'
+              required:
+                - cartItems
+      responses:
+        '200':
+          description: List of upsell suggestions
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    productId:
-                      type: string
-                    name:
-                      type: string
-                    price:
-                      type: number
-        "400":
-          description: Invalid input
+                  $ref: '#/components/schemas/UpsellSuggestion'
+        '500':
+          description: Error processing upsell
+
