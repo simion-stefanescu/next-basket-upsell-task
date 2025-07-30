@@ -56,7 +56,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/CartItem'
+            $ref: "#/components/schemas/CartItem"
       required:
         - items
 
@@ -70,7 +70,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/CartItem'
+            $ref: "#/components/schemas/CartItem"
         subtotal:
           type: number
           format: float
@@ -108,67 +108,66 @@ components:
         - confidence
 
 paths:
-
   /catalog:
     get:
       summary: List all products for the tenant
       parameters:
-        - $ref: '#/components/parameters/TenantId'
+        - $ref: "#/components/parameters/TenantId"
       responses:
-        '200':
+        "200":
           description: List of products
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Product'
+                  $ref: "#/components/schemas/Product"
 
   /catalog/{id}:
     get:
       summary: Get product by ID
       parameters:
-        - $ref: '#/components/parameters/TenantId'
+        - $ref: "#/components/parameters/TenantId"
         - name: id
           in: path
           required: true
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Product detail
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
-        '404':
+                $ref: "#/components/schemas/Product"
+        "404":
           description: Product not found
 
   /cart:
     post:
       summary: Create or update a cart
       parameters:
-        - $ref: '#/components/parameters/TenantId'
+        - $ref: "#/components/parameters/TenantId"
       requestBody:
         description: Cart items
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Cart'
+              $ref: "#/components/schemas/Cart"
       responses:
-        '200':
+        "200":
           description: Cart updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Cart'
+                $ref: "#/components/schemas/Cart"
 
   /checkout:
     post:
       summary: Checkout the cart, reserve stock, create order, and optionally get upsell
       parameters:
-        - $ref: '#/components/parameters/TenantId'
+        - $ref: "#/components/parameters/TenantId"
       requestBody:
         description: Checkout data including cart items and optional promo code
         required: true
@@ -180,14 +179,14 @@ paths:
                 cartItems:
                   type: array
                   items:
-                    $ref: '#/components/schemas/CartItem'
+                    $ref: "#/components/schemas/CartItem"
                 promoCode:
                   type: string
                   description: Optional promo code for discount
               required:
                 - cartItems
       responses:
-        '200':
+        "200":
           description: Order confirmed with optional upsell suggestions
           content:
             application/json:
@@ -195,12 +194,12 @@ paths:
                 type: object
                 properties:
                   order:
-                    $ref: '#/components/schemas/Order'
+                    $ref: "#/components/schemas/Order"
                   upsellSuggestions:
                     type: array
                     items:
-                      $ref: '#/components/schemas/UpsellSuggestion'
-        '400':
+                      $ref: "#/components/schemas/UpsellSuggestion"
+        "400":
           description: Invalid request or stock validation failed
 
   /upsell:
@@ -219,18 +218,17 @@ paths:
                 cartItems:
                   type: array
                   items:
-                    $ref: '#/components/schemas/CartItem'
+                    $ref: "#/components/schemas/CartItem"
               required:
                 - cartItems
       responses:
-        '200':
+        "200":
           description: List of upsell suggestions
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/UpsellSuggestion'
-        '500':
+                  $ref: "#/components/schemas/UpsellSuggestion"
+        "500":
           description: Error processing upsell
-
